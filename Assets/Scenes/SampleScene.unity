@@ -8731,6 +8731,7 @@ MonoBehaviour:
   defaultPrecision: 0.995
   rightHandOffset: {x: 0, y: 0, z: 0}
   leftHandOffset: {x: 0, y: 0, z: 0}
+  handHeightBias: 0.9
   locomotionEnabledLayers:
     serializedVersion: 2
     m_Bits: 1

@@ -48,7 +48,7 @@ namespace GorillaLocomotion
         // This lets you push off the floor with a natural arm swing without physically bending down.
         // Visual hands are unaffected; only the collision detection point moves.
         // Tune this in the Inspector until floor contact feels natural (start around 0.5).
-        public float handHeightBias = 0.5f;
+        public float handHeightBias = 0.9f;
 
         public LayerMask locomotionEnabledLayers;
 
@@ -83,32 +83,24 @@ namespace GorillaLocomotion
 
         private Vector3 CurrentLeftHandPosition()
         {
-            // Shift the locomotion point down by handHeightBias in world space.
-            // The arm-length clamp still applies from the real head position so reach limits are preserved.
-            Vector3 pos = PositionWithOffset(leftHandTransform, leftHandOffset) - Vector3.up * handHeightBias;
-            if ((pos - headCollider.transform.position).magnitude < maxArmLength)
-            {
-                return pos;
-            }
-            else
-            {
-                return headCollider.transform.position + (pos - headCollider.transform.position).normalized * maxArmLength;
-            }
+            // Clamp arm length using the real hand position, then apply the height bias.
+            // This prevents the bias from inflating the apparent arm length and triggering the clamp prematurely.
+            Vector3 realPos = PositionWithOffset(leftHandTransform, leftHandOffset);
+            Vector3 clamped = (realPos - headCollider.transform.position).magnitude < maxArmLength
+                ? realPos
+                : headCollider.transform.position + (realPos - headCollider.transform.position).normalized * maxArmLength;
+            return clamped - Vector3.up * handHeightBias;
         }
 
         private Vector3 CurrentRightHandPosition()
         {
-            // Shift the locomotion point down by handHeightBias in world space.
-            // The arm-length clamp still applies from the real head position so reach limits are preserved.
-            Vector3 pos = PositionWithOffset(rightHandTransform, rightHandOffset) - Vector3.up * handHeightBias;
-            if ((pos - headCollider.transform.position).magnitude < maxArmLength)
-            {
-                return pos;
-            }
-            else
-            {
-                return headCollider.transform.position + (pos - headCollider.transform.position).normalized * maxArmLength;
-            }
+            // Clamp arm length using the real hand position, then apply the height bias.
+            // This prevents the bias from inflating the apparent arm length and triggering the clamp prematurely.
+            Vector3 realPos = PositionWithOffset(rightHandTransform, rightHandOffset);
+            Vector3 clamped = (realPos - headCollider.transform.position).magnitude < maxArmLength
+                ? realPos
+                : headCollider.transform.position + (realPos - headCollider.transform.position).normalized * maxArmLength;
+            return clamped - Vector3.up * handHeightBias;
         }
 
         private Vector3 PositionWithOffset(Transform transformToModify, Vector3 offsetVector)

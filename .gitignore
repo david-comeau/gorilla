@@ -19,3 +19,4 @@ Thumbs.db
 
 *.apk
 gorilla_BurstDebugInformation_DoNotShip/
+.utmp
