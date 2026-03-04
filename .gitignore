@@ -17,4 +17,5 @@
 .DS_Store
 Thumbs.db
 
-gorilla.apk
+*.apk
+gorilla_BurstDebugInformation_DoNotShip/
